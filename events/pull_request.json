@@ -1,14 +1,14 @@
 {
-    "action": "opened",
-    "pull_request": {
-        "number": 1,
-        "title": "Test PR",
-        "additions": 120,
-        "deletions": 30,
-        "changed_files": 8
-    },
-    "repository": {
-        "owner": { "login": "your-org" },
-        "name": "your-repo"
-    }
+  "action": "opened",
+  "pull_request": {
+    "number": 1,
+    "title": "Test PR",
+    "additions": 120,
+    "deletions": 30,
+    "changed_files": 8
+  },
+  "repository": {
+    "owner": { "login": "your-org" },
+    "name": "your-repo"
+  }
 }
