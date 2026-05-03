@@ -103,22 +103,18 @@ Go to `GitHub Settings` → `Developer settings` → `Personal access tokens` �
 
 ### 4. Run against the mock event
 
+* You need to have Docker installed.
+
 Bash:
 
 ```bash
-act pull_request \
-  --eventpath events/pull_request.json \
-  --secret GITHUB_TOKEN=your_pat_here \
-  --platform ubuntu-latest=catthehacker/ubuntu:act-latest
+act pull_request --eventpath events/pull_request.json --secret GITHUB_TOKEN=your_pat_here --platform ubuntu-latest=catthehacker/ubuntu:act-latest
 ```
 
 PowerShell:
 
 ```powershell
-act pull_request `
-  --eventpath events/pull_request.json `
-  --secret GITHUB_TOKEN=your_pat_here `
-  --platform ubuntu-latest=catthehacker/ubuntu:act-latest
+act pull_request --eventpath events/pull_request.json --secret GITHUB_TOKEN=your_pat_here --platform ubuntu-latest=catthehacker/ubuntu:act-latest
 ```
 
 On first run select **Medium** when prompted for the Docker image size.
@@ -128,7 +124,6 @@ On first run select **Medium** when prompted for the Docker image size.
 ```bash
 npm run build && act pull_request --eventpath events/pull_request.json --secret GITHUB_TOKEN=your_pat
 ```
-
 
 ## Project structure
 
