@@ -8,51 +8,51 @@ branding:
 
 inputs:
   github-token:
-    description: 'GitHub token with pull-request write permissions.'
+    description: 'GitHub token with write permissions for pull-requests and issues.'
     required: true
     default: ${{ github.token }}
 
   enable-risk-labels:
-    description: "Set to 'false' to skip risk/* labels entirely."
+    description: "Whether to apply risk/* labels. Set to 'false' to disable."
     required: false
     default: 'true'
 
   size-small-threshold:
-    description: 'Max total lines (add+del) for size/small.'
+    description: 'Max total changed lines (additions + deletions) to be labelled size/small. Above this → size/medium.'
     required: false
     default: '99'
 
   size-medium-threshold:
-    description: 'Max total lines (add+del) for size/medium (above = large).'
+    description: 'Max total changed lines (additions + deletions) to be labelled size/medium. Above this → size/large.'
     required: false
     default: '499'
 
   risk-low-lines:
-    description: 'Max lines for risk/low.'
+    description: 'Max total changed lines for risk/low. Both this and risk-low-files must hold.'
     required: false
     default: '99'
 
   risk-low-files:
-    description: 'Max files changed for risk/low.'
+    description: 'Max files changed for risk/low. Both this and risk-low-lines must hold.'
     required: false
     default: '5'
 
   risk-medium-lines:
-    description: 'Max lines for risk/medium (above = high).'
+    description: 'Max total changed lines for risk/medium. Both this and risk-medium-files must hold. Above → risk/high.'
     required: false
     default: '499'
 
   risk-medium-files:
-    description: 'Max files changed for risk/medium (above = high).'
+    description: 'Max files changed for risk/medium. Both this and risk-medium-lines must hold. Above → risk/high.'
     required: false
     default: '15'
 
 outputs:
   size-label:
-    description: 'The size label that was applied (e.g. size/small).'
+    description: 'The size label applied to the PR — one of size/small, size/medium, size/large.'
 
   risk-label:
-    description: 'The risk label that was applied (e.g. risk/high), or empty string.'
+    description: 'The risk label applied to the PR — one of risk/low, risk/medium, risk/high. Empty string if risk labels are disabled.'
 
 runs:
   using: 'node20'
