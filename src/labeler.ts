@@ -45,7 +45,9 @@ export const applyLabels = async (octokit: Octokit, { owner, repo, pullNumber, s
         await ensureLabelsExist(octokit, { owner, repo, enableRisk });
     }
 
-    const existingLabels = isActLocal ? [] : await fetchExistingPrLabels(octokit, { owner, repo, pullNumber });
+    const existingLabels = isActLocal
+        ? []
+        : await fetchExistingPrLabels(octokit, { owner, repo, pullNumber });
 
     const sizePrefix = 'size/';
     const riskPrefix = 'risk/';

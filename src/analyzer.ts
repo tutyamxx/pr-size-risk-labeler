@@ -19,7 +19,7 @@ type Octokit = InstanceType<typeof GitHub>;
 
 /**
  * Analyzes a pull request and returns a summary of its diff size and affected files.
- * When a prPayload is provided (e.g. from a mock event), it skips the GitHub API call
+ * When a `prPayload` is provided (e.g. from a mock event), it skips the GitHub API call
  * and uses the payload data directly — useful for local testing with nektos/act.
  *
  * @param octokit - Authenticated Octokit instance.

@@ -1,7 +1,6 @@
 # 🏷️ PR Size & Risk Labeler
 
 * A GitHub Action that automatically labels pull requests based on diff size and change risk.
-* Code is **NOT** published to `GitHub Marketplace` yet!!! I will at some point.
 > ⚠️ **Not published yet.** This action is in development and not available on the GitHub Marketplace yet. Do not publish or redistribute without permission.
 
 
@@ -90,8 +89,21 @@ npm run format
 
 ### 1. Install act
 
+Windows:
+
 ```powershell
 winget install nektos.act
+```
+
+macOS:
+
+```bash
+brew install act
+```
+
+Linux:
+```bash
+curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
 ```
 
 ### 2. Build the action

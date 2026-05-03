@@ -21,15 +21,15 @@ interface ActionConfig {
 /**
  * Reads a numeric action input by name and parses it as a base-10 integer.
  *
- * @param name - The action input name as defined in `action.yml`.
- * @param fallback - Value to return if the input is missing or not a valid integer.
+ * @param inputName - The action input name as defined in `action.yml`.
+ * @param defaultValue - Value to return if the input is missing or not a valid integer.
  * @returns The parsed integer, or `fallback` if parsing fails.
  */
-const parseIntInput = (name: string, fallback: number): number => {
-    const raw = core.getInput(name);
+const parseIntInput = (inputName: string, defaultValue: number): number => {
+    const raw = core.getInput(inputName);
     const parsed = raw ? parseInt(raw, 10) : NaN;
 
-    return isNaN(parsed) ? fallback : parsed;
+    return isNaN(parsed) ? defaultValue : parsed;
 };
 
 /**
