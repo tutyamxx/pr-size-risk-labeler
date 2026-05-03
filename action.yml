@@ -1,6 +1,6 @@
 name: 'PR Size & Risk Labeler'
 description: 'Automatically labels pull requests by diff size and change risk.'
-author: 'tuty'
+author: 'tutyamxx'
 
 branding:
   icon: 'tag'

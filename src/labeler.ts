@@ -33,14 +33,19 @@ const RISK_LABELS: LabelDefinition[] = [
 /**
  * Applies size and risk labels to a pull request.
  * Removes any stale size/risk labels before adding the newly resolved ones.
+ * Skips label existence check and API calls when running locally via nektos/act.
  *
  * @param octokit - Authenticated Octokit instance.
  * @param params - PR coordinates, resolved label names, and risk toggle.
  */
 export const applyLabels = async (octokit: Octokit, { owner, repo, pullNumber, sizeLabel, riskLabel, enableRisk }: ApplyLabelsParams): Promise<void> => {
-    await ensureLabelsExist(octokit, { owner, repo, enableRisk });
+    const isActLocal = process.env?.ACT === 'true';
 
-    const existingLabels = await fetchExistingPrLabels(octokit, { owner, repo, pullNumber });
+    if (!isActLocal) {
+        await ensureLabelsExist(octokit, { owner, repo, enableRisk });
+    }
+
+    const existingLabels = isActLocal ? [] : await fetchExistingPrLabels(octokit, { owner, repo, pullNumber });
 
     const sizePrefix = 'size/';
     const riskPrefix = 'risk/';
@@ -48,15 +53,16 @@ export const applyLabels = async (octokit: Octokit, { owner, repo, pullNumber, s
     const labelsToRemove = existingLabels.filter(l => l.startsWith(sizePrefix) || (enableRisk && l.startsWith(riskPrefix)));
     const labelsToAdd = [sizeLabel, ...(enableRisk && riskLabel ? [riskLabel] : [])].filter(l => !existingLabels.includes(l));
 
+    if (isActLocal) {
+        core.info(`[act] Skipping GitHub API label calls — would apply: ${labelsToAdd.join(', ')}`);
+
+        return;
+    }
+
     await Promise.all(labelsToRemove.map(label => removeLabel(octokit, { owner, repo, pullNumber, label })));
 
     if (labelsToAdd.length > 0) {
-        await octokit.rest.issues.addLabels({
-            owner,
-            repo,
-            issue_number: pullNumber,
-            labels: labelsToAdd
-        });
+        await octokit.rest.issues.addLabels({ owner, repo, issue_number: pullNumber, labels: labelsToAdd });
         core.info(`Added labels: ${labelsToAdd.join(', ')}`);
     }
 };

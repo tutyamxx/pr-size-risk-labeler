@@ -5,7 +5,11 @@
     "title": "Test PR",
     "additions": 120,
     "deletions": 30,
-    "changed_files": 8
+    "changed_files": 8,
+    "labels": [
+      { "id": 1, "name": "size/small", "color": "2cbe4e", "description": "PR changes fewer than 100 lines" },
+      { "id": 2, "name": "risk/low", "color": "0e8a16", "description": "Low-risk change" }
+    ]
   },
   "repository": {
     "owner": { "login": "tutyamxx" },

@@ -28,7 +28,7 @@ const run = async (): Promise<void> => {
         core.info(`Analyzing PR #${pr?.number}: "${pr?.title}"`);
 
         const { owner, repo } = context.repo;
-        const analysis = await analyzePullRequest(octokit, { owner, repo, pullNumber: pr?.number });
+        const analysis = await analyzePullRequest(octokit, { owner, repo, pullNumber: pr?.number }, pr);
 
         core.info(`Lines added: ${analysis?.additions}, removed: ${analysis?.deletions}, files changed: ${analysis?.filesChanged}`);
 

@@ -122,7 +122,7 @@ On first run select **Medium** when prompted for the Docker image size.
 ### 5. Rebuild and retest
 
 ```bash
-npm run build && act pull_request --eventpath events/pull_request.json --workflows label-pr-example.yml --secret GITHUB_TOKEN=your_pat
+npm run build && act pull_request --eventpath events/pull_request.json --workflows label-pr-example.yml --secret GITHUB_TOKEN=your_pat --bind
 ```
 
 ## Project structure

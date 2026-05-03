@@ -19,23 +19,24 @@ type Octokit = InstanceType<typeof GitHub>;
 
 /**
  * Analyzes a pull request and returns a summary of its diff size and affected files.
+ * When a prPayload is provided (e.g. from a mock event), it skips the GitHub API call
+ * and uses the payload data directly — useful for local testing with nektos/act.
  *
  * @param octokit - Authenticated Octokit instance.
  * @param params - Repository owner, name, and PR number.
+ * @param prPayload - Optional PR payload from the event context to skip the API call.
  * @returns A {@link PrAnalysis} object with line counts and file names.
  * @throws If the GitHub API request fails.
  */
-export const analyzePullRequest = async (octokit: Octokit, { owner, repo, pullNumber }: PrParams): Promise<PrAnalysis> => {
+export const analyzePullRequest = async (octokit: Octokit, { owner, repo, pullNumber }: PrParams, prPayload?: Record<string, number>): Promise<PrAnalysis> => {
     try {
-        const { data: pr } = await octokit.rest.pulls.get({ owner, repo, pull_number: pullNumber });
-        const files = await fetchAllChangedFiles(octokit, { owner, repo, pullNumber });
+        const additions = prPayload?.additions ?? (await octokit.rest.pulls.get({ owner, repo, pull_number: pullNumber })).data?.additions ?? 0;
+        const deletions = prPayload?.deletions ?? (await octokit.rest.pulls.get({ owner, repo, pull_number: pullNumber })).data?.deletions ?? 0;
+        const filesChanged = prPayload?.changed_files ?? (await octokit.rest.pulls.get({ owner, repo, pull_number: pullNumber })).data?.changed_files ?? 0;
 
-        const additions = pr?.additions ?? 0;
-        const deletions = pr?.deletions ?? 0;
+        const files = prPayload ? [] : await fetchAllChangedFiles(octokit, { owner, repo, pullNumber });
         const totalLines = additions + deletions;
-
-        const filesChanged = pr?.changed_files ?? files.length;
-        const fileNames = files.map(f => f?.filename ?? '');
+        const fileNames = files?.map(f => f?.filename ?? '') ?? [];
 
         core.debug(`Fetched ${files?.length ?? 0} changed files for PR #${pullNumber}`);
 
