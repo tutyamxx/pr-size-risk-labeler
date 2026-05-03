@@ -1,0 +1,59 @@
+name: 'PR Size & Risk Labeler'
+description: 'Automatically labels pull requests by diff size and change risk.'
+author: 'tuty'
+
+branding:
+  icon: 'tag'
+  color: 'orange'
+
+inputs:
+  github-token:
+    description: 'GitHub token with pull-request write permissions.'
+    required: true
+    default: ${{ github.token }}
+
+  enable-risk-labels:
+    description: "Set to 'false' to skip risk/* labels entirely."
+    required: false
+    default: 'true'
+
+  size-small-threshold:
+    description: 'Max total lines (add+del) for size/small.'
+    required: false
+    default: '99'
+
+  size-medium-threshold:
+    description: 'Max total lines (add+del) for size/medium (above = large).'
+    required: false
+    default: '499'
+
+  risk-low-lines:
+    description: 'Max lines for risk/low.'
+    required: false
+    default: '99'
+
+  risk-low-files:
+    description: 'Max files changed for risk/low.'
+    required: false
+    default: '5'
+
+  risk-medium-lines:
+    description: 'Max lines for risk/medium (above = high).'
+    required: false
+    default: '499'
+
+  risk-medium-files:
+    description: 'Max files changed for risk/medium (above = high).'
+    required: false
+    default: '15'
+
+outputs:
+  size-label:
+    description: 'The size label that was applied (e.g. size/small).'
+
+  risk-label:
+    description: 'The risk label that was applied (e.g. risk/high), or empty string.'
+
+runs:
+  using: 'node24'
+  main: 'action-dist/index.js'
