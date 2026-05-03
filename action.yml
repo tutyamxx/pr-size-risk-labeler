@@ -55,5 +55,5 @@ outputs:
     description: 'The risk label that was applied (e.g. risk/high), or empty string.'
 
 runs:
-  using: 'node24'
+  using: 'node20'
   main: 'action-dist/index.js'

@@ -25,17 +25,17 @@ All thresholds are configurable via action inputs.
 ## Usage
 
 ```yaml
-    - name: Run PR labeler
-      uses: your-org/pr-size-risk-labeler@v1
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        enable-risk-labels: 'true'
-        size-small-threshold: '99'
-        size-medium-threshold: '499'
-        risk-low-lines: '99'
-        risk-low-files: '5'
-        risk-medium-lines: '499'
-        risk-medium-files: '15'
+- name: Run PR labeler
+  uses: your-org/pr-size-risk-labeler@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    enable-risk-labels: 'true'
+    size-small-threshold: '99'
+    size-medium-threshold: '499'
+    risk-low-lines: '99'
+    risk-low-files: '5'
+    risk-medium-lines: '499'
+    risk-medium-files: '15'
 ```
 
 
@@ -99,7 +99,7 @@ npm run build
 
 ### 3. Create a personal access token
 
-Go to `GitHub Settings` → `Developer settings` → `Personal access tokens` and create a token with `repo` scope.
+Go to `GitHub Settings` → `Developer settings` → `Personal access tokens` → `Tokens (classic)`and create a token with `repo` scope.
 
 ### 4. Run against the mock event
 
@@ -107,18 +107,18 @@ Bash:
 
 ```bash
 act pull_request \
-    --eventpath events/pull_request.json \
-    --secret GITHUB_TOKEN=your_pat_here \
-    --platform ubuntu-latest=catthehacker/ubuntu:act-latest
+  --eventpath events/pull_request.json \
+  --secret GITHUB_TOKEN=your_pat_here \
+  --platform ubuntu-latest=catthehacker/ubuntu:act-latest
 ```
 
 PowerShell:
 
 ```powershell
 act pull_request `
-    --eventpath events/pull_request.json `
-    --secret GITHUB_TOKEN=your_pat_here `
-    --platform ubuntu-latest=catthehacker/ubuntu:act-latest
+  --eventpath events/pull_request.json `
+  --secret GITHUB_TOKEN=your_pat_here `
+  --platform ubuntu-latest=catthehacker/ubuntu:act-latest
 ```
 
 On first run select **Medium** when prompted for the Docker image size.
