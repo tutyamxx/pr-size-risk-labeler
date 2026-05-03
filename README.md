@@ -108,13 +108,13 @@ Go to `GitHub Settings` → `Developer settings` → `Personal access tokens` �
 Bash:
 
 ```bash
-act pull_request --eventpath events/pull_request.json --secret GITHUB_TOKEN=your_pat_here --platform ubuntu-latest=catthehacker/ubuntu:act-latest
+act pull_request --eventpath events/pull_request.json --workflows label-pr-example.yml --secret GITHUB_TOKEN=your_pat_here --platform ubuntu-latest=catthehacker/ubuntu:act-latest
 ```
 
 PowerShell:
 
 ```powershell
-act pull_request --eventpath events/pull_request.json --secret GITHUB_TOKEN=your_pat_here --platform ubuntu-latest=catthehacker/ubuntu:act-latest
+act pull_request --eventpath events/pull_request.json --workflows label-pr-example.yml --secret GITHUB_TOKEN=your_pat_here --platform ubuntu-latest=catthehacker/ubuntu:act-latest
 ```
 
 On first run select **Medium** when prompted for the Docker image size.
@@ -122,7 +122,7 @@ On first run select **Medium** when prompted for the Docker image size.
 ### 5. Rebuild and retest
 
 ```bash
-npm run build && act pull_request --eventpath events/pull_request.json --secret GITHUB_TOKEN=your_pat
+npm run build && act pull_request --eventpath events/pull_request.json --workflows label-pr-example.yml --secret GITHUB_TOKEN=your_pat
 ```
 
 ## Project structure
