@@ -22,17 +22,17 @@ jobs:
         uses: ./ # Replace with your-org/pr-size-risk-labeler@v1 after publishing
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          enable-risk-labels: 'true'
+          enable-risk-labels: true
 
           # Size thresholds (total lines = additions + deletions)
-          size-small-threshold: '99' # ≤  99 → size/small
-          size-medium-threshold: '499' # ≤ 499 → size/medium  |  500+ → size/large
+          size-small-threshold: 99      # ≤  99 → size/small
+          size-medium-threshold: 499    # ≤ 499 → size/medium  |  500+ → size/large
 
           # Risk thresholds
-          risk-low-lines: '99' # Both conditions must hold for risk/low
-          risk-low-files: '5'
-          risk-medium-lines: '499' # Both conditions must hold for risk/medium
-          risk-medium-files: '15' # Otherwise → risk/high
+          risk-low-lines: 99            # Both conditions must hold for risk/low
+          risk-low-files: 5
+          risk-medium-lines: 499        # Both conditions must hold for risk/medium
+          risk-medium-files: 15         # Otherwise → risk/high
 
       - name: Log applied labels
         if: always()

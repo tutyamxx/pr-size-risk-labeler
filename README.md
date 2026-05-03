@@ -28,16 +28,22 @@ All thresholds are configurable via action inputs.
 
 ```yaml
 - name: Run PR labeler
+  id: labeler
   uses: your-org/pr-size-risk-labeler@v1
+
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    enable-risk-labels: 'true'
-    size-small-threshold: '99'
-    size-medium-threshold: '499'
-    risk-low-lines: '99'
-    risk-low-files: '5'
-    risk-medium-lines: '499'
-    risk-medium-files: '15'
+    enable-risk-labels: true
+
+    # Size thresholds (total lines = additions + deletions)
+    size-small-threshold: 99      # ≤  99 → size/small
+    size-medium-threshold: 499    # ≤ 499 → size/medium  |  500+ → size/large
+
+    # Risk thresholds
+    risk-low-lines: 99            # Both conditions must hold for risk/low
+    risk-low-files: 5
+    risk-medium-lines: 499        # Both conditions must hold for risk/medium
+    risk-medium-files: 15         # Otherwise → risk/high
 ```
 
 ## 📥 Inputs
