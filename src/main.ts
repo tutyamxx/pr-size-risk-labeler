@@ -69,7 +69,7 @@ const run = async (): Promise<void> => {
  * @param config - Action config returned by {@link getConfig}.
  * @returns An object containing the resolved `sizeLabel` and `riskLabel`.
  */
-const resolveLabels = (analysis: { totalLines: number; filesChanged: number }, config: ReturnType<typeof getConfig>): { sizeLabel: string; riskLabel: string | null } => {
+export const resolveLabels = (analysis: { totalLines: number; filesChanged: number }, config: ReturnType<typeof getConfig>): { sizeLabel: string; riskLabel: string | null } => {
     const totalLines = analysis?.totalLines ?? 0;
     const filesChanged = analysis?.filesChanged ?? 0;
     const sizeThresholds = config?.sizeThresholds;

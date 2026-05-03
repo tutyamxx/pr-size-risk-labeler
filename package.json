@@ -5,7 +5,6 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc && ncc build dist/main.js -o action-dist --license licenses.txt",
-    "lint": "eslint src/**/*.ts",
     "test": "jest --verbose",
     "format": "prettier --write ."
   },
@@ -17,10 +16,20 @@
     "@actions/github": "^6.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@vercel/ncc": "^0.38.1",
+    "jest": "^30.3.0",
     "prettier": "^3.8.3",
+    "ts-jest": "^29.4.9",
     "typescript": "^5.4.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.test.ts"
+    ]
   },
   "author": "tuty",
   "license": "UNLICENSED"
