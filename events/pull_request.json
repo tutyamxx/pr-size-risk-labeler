@@ -8,7 +8,11 @@
     "changed_files": 8,
     "labels": [
       { "id": 1, "name": "size/small", "color": "2cbe4e", "description": "PR changes fewer than 100 lines" },
-      { "id": 2, "name": "risk/low", "color": "0e8a16", "description": "Low-risk change" }
+      { "id": 2, "name": "size/medium", "color": "e4a826", "description": "PR changes 100-499 lines" },
+      { "id": 3, "name": "size/large", "color": "d93f0b", "description": "PR changes 500+ lines" },
+      { "id": 4, "name": "risk/low", "color": "0e8a16", "description": "Low-risk change" },
+      { "id": 5, "name": "risk/medium", "color": "fbca04", "description": "Medium-risk change" },
+      { "id": 6, "name": "risk/high", "color": "b60205", "description": "High-risk change — review carefully" }
     ]
   },
   "repository": {
