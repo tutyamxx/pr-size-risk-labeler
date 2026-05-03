@@ -11,9 +11,9 @@ When a pull request is opened or updated, the action:
 
 * Calculates total lines changed (additions + deletions)
 * Assigns a size label:
-  - `size/small` — fewer than 100 lines
-  - `size/medium` — 100 to 499 lines
-  - `size/large` — 500+ lines
+  - `size/small` — fewer than `100` lines
+  - `size/medium` — `100` to `499` lines
+  - `size/large` — `500+` lines
 * Assigns a risk label:
   - `risk/low` — small change across few files
   - `risk/medium` — moderate change
@@ -43,25 +43,26 @@ All thresholds are configurable via action inputs.
 
 ## 📥 Inputs
 
-| Input                   | Required | Default        | Description                                          |
-|-------------------------|----------|----------------|------------------------------------------------------|
-| `github-token`          | yes      | `github.token` | Token with pull-request and issues write permissions |
-| `enable-risk-labels`    | no       | `true`         | Set to `false` to skip risk labels                   |
-| `size-small-threshold`  | no       | `99`           | Max lines for `size/small`                           |
-| `size-medium-threshold` | no       | `499`          | Max lines for `size/medium`                          |
-| `risk-low-lines`        | no       | `99`           | Max lines for `risk/low`                             |
-| `risk-low-files`        | no       | `5`            | Max files for `risk/low`                             |
-| `risk-medium-lines`     | no       | `499`          | Max lines for `risk/medium`                          |
-| `risk-medium-files`     | no       | `15`           | Max files for `risk/medium`                          |
+| Input | Required | Default | Description |
+|---|---|---|---|
+| `github-token` | yes | `github.token` | Token with pull-request and issues write permissions |
+| `enable-risk-labels` | no | `true` | Set to `false` to skip risk labels |
+| `size-small-threshold` | no | `99` | Lines `≤ 99` -> `size/small` |
+| `size-medium-threshold` | no | `499` | Lines `≤ 499` -> `size/medium`, above -> `size/large` |
+| `risk-low-lines` | no | `99` | Lines threshold for `risk/low` (both conditions must hold) |
+| `risk-low-files` | no | `5` | Files threshold for `risk/low` (both conditions must hold) |
+| `risk-medium-lines` | no | `499` | Lines threshold for `risk/medium` (both conditions must hold), above -> `risk/high` |
+| `risk-medium-files` | no | `15` | Files threshold for `risk/medium` (both conditions must hold), above -> `risk/high` |
 
 ---
 
 ## 📤 Outputs
 
-| Output       | Description                                          |
-|--------------|------------------------------------------------------|
-| `size-label` | The size label applied e.g. `size/small`             |
-| `risk-label` | The risk label applied e.g. `risk/high`, empty string if disabled |
+| Output | Description |
+|---|---|
+| `size-label` | The size label applied — one of `size/small`, `size/medium`, `size/large` |
+| `risk-label` | The risk label applied — one of `risk/low`, `risk/medium`, `risk/high`, or empty string if disabled |
+
 
 ## 🛠️ Development
 
