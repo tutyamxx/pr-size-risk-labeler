@@ -1,8 +1,8 @@
-# PR Size & Risk Labeler
+# 🏷️ PR Size & Risk Labeler
 
 A GitHub Action that automatically labels pull requests based on diff size and change risk.
 
-## What it does
+## ⚡ What it does
 
 When a pull request is opened or updated, the action:
 
@@ -20,9 +20,9 @@ All thresholds are configurable via action inputs.
 
 ## How to use once published
 
-* See `label-pr-example.yml` for more
+> 💡 See `label-pr-example.yml` for a full workflow example.
 
-## Usage
+## 🚀 Usage
 
 ```yaml
 - name: Run PR labeler
@@ -38,8 +38,7 @@ All thresholds are configurable via action inputs.
     risk-medium-files: '15'
 ```
 
-
-## Inputs
+## 📥 Inputs
 
 | Input                   | Required | Default        | Description                                          |
 |-------------------------|----------|----------------|------------------------------------------------------|
@@ -54,14 +53,14 @@ All thresholds are configurable via action inputs.
 
 ---
 
-## Outputs
+## 📤 Outputs
 
 | Output       | Description                                          |
 |--------------|------------------------------------------------------|
 | `size-label` | The size label applied e.g. `size/small`             |
 | `risk-label` | The risk label applied e.g. `risk/high`, empty string if disabled |
 
-## Development
+## 🛠️ Development
 
 ### Install dependencies
 
@@ -83,7 +82,7 @@ The output is written to `action-dist/index.js`.
 npm run format
 ```
 
-## Testing locally with nektos/act
+## Testing locally with nektos/act 🐳
 
 ### 1. Install act
 
@@ -97,13 +96,13 @@ winget install nektos.act
 npm run build
 ```
 
-### 3. Create a personal access token
+### 3. 🔑 Create a personal access token
 
 Go to `GitHub Settings` → `Developer settings` → `Personal access tokens` → `Tokens (classic)`and create a token with `repo` scope.
 
 ### 4. Run against the mock event
 
-* You need to have Docker installed.
+> ⚠️ You need Docker installed and running.
 
 Bash:
 
@@ -117,15 +116,21 @@ PowerShell:
 act pull_request --eventpath events/pull_request.json --workflows label-pr-example.yml --secret GITHUB_TOKEN=your_pat_here --platform ubuntu-latest=catthehacker/ubuntu:act-latest --verbose --bind
 ```
 
-On first run select **Medium** when prompted for the Docker image size.
+> 💡 On first run select **Medium** when prompted for the Docker image size. It shouldn't usually ask but be aware.
 
-### 5. Rebuild and retest
+### 5. ♻️ Rebuild and retest (Run this after building the image above)
 
 ```bash
 npm run build && act pull_request --eventpath events/pull_request.json --workflows label-pr-example.yml --secret GITHUB_TOKEN=your_pat --bind
 ```
 
-## Project structure
+* You should see something like in the image below.
+
+![Terminal image](image.png)
+
+> ✅ With `120+30=150` lines and `8` files the action should strip all existing labels and resolve down to just `size/medium` and `risk/medium`. This comes from the `events/pull_request.json` mock.
+
+## 📁 Project structure
 
 ```
 ├── src/
