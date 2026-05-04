@@ -377,12 +377,12 @@ const run = async () => {
             return;
         }
         const config = (0, config_1.getConfig)();
-        core.info(`Analyzing PR #${pr?.number}: "${pr?.title}"`);
+        core.info(`🔍 Analyzing PR #${pr?.number}: "${pr?.title}"`);
         const { owner, repo } = context.repo;
         const analysis = await (0, analyzer_1.analyzePullRequest)(octokit, { owner, repo, pullNumber: pr?.number }, pr);
-        core.info(`Lines added: ${analysis?.additions}, removed: ${analysis?.deletions}, files changed: ${analysis?.filesChanged}`);
+        core.info(`✅ Lines added: ${analysis?.additions}, 🧨 removed: ${analysis?.deletions}, 📁 files changed: ${analysis?.filesChanged}`);
         const { sizeLabel, riskLabel } = (0, exports.resolveLabels)(analysis, config);
-        core.info(`Size label: ${sizeLabel} | Risk label: ${riskLabel ?? 'none'}`);
+        core.info(`📏 Size label: ${sizeLabel} | ⚠️ Risk label: ${riskLabel ?? 'none'}`);
         await (0, labeler_1.applyLabels)(octokit, {
             owner,
             repo,
@@ -396,7 +396,7 @@ const run = async () => {
         core.info('✅ Labels applied successfully.');
     }
     catch (error) {
-        core.setFailed(`Action failed: ${error instanceof Error ? error?.message : String(error)}`);
+        core.setFailed(`🚨 Action failed: ${error instanceof Error ? error?.message : String(error)}`);
     }
 };
 /**
@@ -419,14 +419,23 @@ const run = async () => {
 const resolveLabels = (analysis, config) => {
     const totalLines = analysis?.totalLines ?? 0;
     const filesChanged = analysis?.filesChanged ?? 0;
-    const sizeThresholds = config?.sizeThresholds;
-    const riskThresholds = config?.riskThresholds;
-    const sizeLabel = totalLines <= (sizeThresholds?.small ?? 99) ? 'size/small' : totalLines <= (sizeThresholds?.medium ?? 499) ? 'size/medium' : 'size/large';
-    const riskLabel = totalLines <= (riskThresholds?.low ?? 99) && filesChanged <= (riskThresholds?.lowFiles ?? 5)
-        ? 'risk/low'
-        : totalLines <= (riskThresholds?.medium ?? 499) && filesChanged <= (riskThresholds?.mediumFiles ?? 15)
-            ? 'risk/medium'
-            : 'risk/high';
+    const { sizeThresholds, riskThresholds } = config ?? {};
+    // --| 🏷️ Determine Size Label
+    let sizeLabel = 'size/large';
+    if (totalLines <= (sizeThresholds?.small ?? 99)) {
+        sizeLabel = 'size/small';
+    }
+    else if (totalLines <= (sizeThresholds?.medium ?? 499)) {
+        sizeLabel = 'size/medium';
+    }
+    // --| ⚠️ Determine Risk Label
+    let riskLabel = 'risk/high';
+    if (totalLines <= (riskThresholds?.low ?? 99) && filesChanged <= (riskThresholds?.lowFiles ?? 5)) {
+        riskLabel = 'risk/low';
+    }
+    else if (totalLines <= (riskThresholds?.medium ?? 499) && filesChanged <= (riskThresholds?.mediumFiles ?? 15)) {
+        riskLabel = 'risk/medium';
+    }
     return { sizeLabel, riskLabel };
 };
 exports.resolveLabels = resolveLabels;

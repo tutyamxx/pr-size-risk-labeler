@@ -167,7 +167,7 @@ npm run build && act pull_request --eventpath events/pull_request.json --workflo
 
 * You should see something like in the image below.
 
-![Terminal image](image.png)
+![Terminal Image](image-1.png)
 
 > ✅ With `120+30=150` lines and `8` files the action should strip all existing labels and resolve down to just `size/medium` and `risk/medium`. This comes from the `events/pull_request.json` mock.
 
