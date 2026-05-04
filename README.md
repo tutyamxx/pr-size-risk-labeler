@@ -20,30 +20,49 @@ When a pull request is opened or updated, the action:
 
 All thresholds are configurable via action inputs.
 
-## How to use once published
 
-> 💡 See `label-pr-example.yml` for a full workflow example.
+## 🚀 Usage (when is published)
 
-## 🚀 Usage
+> 💡 Add this workflow to any repo at `.github/workflows/label-pr.yml`:
 
 ```yaml
-- name: Run PR labeler
-  id: labeler
-  uses: your-org/pr-size-risk-labeler@v1
+name: Label PRs
 
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    enable-risk-labels: true
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
-    # Size thresholds (total lines = additions + deletions)
-    size-small-threshold: 99      # ≤  99 → size/small
-    size-medium-threshold: 499    # ≤ 499 → size/medium  |  500+ → size/large
+permissions:
+  pull-requests: write
+  issues: write
 
-    # Risk thresholds
-    risk-low-lines: 99            # Both conditions must hold for risk/low
-    risk-low-files: 5
-    risk-medium-lines: 499        # Both conditions must hold for risk/medium
-    risk-medium-files: 15         # Otherwise → risk/high
+jobs:
+  label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run PR labeler
+        id: labeler
+        uses: tutyamxx/pr-size-risk-labeler@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          enable-risk-labels: true
+
+          # Size thresholds (total lines = additions + deletions)
+          size-small-threshold: 99      # ≤  99 → size/small
+          size-medium-threshold: 499    # ≤ 499 → size/medium  |  500+ → size/large
+
+          # Risk thresholds
+          risk-low-lines: 99            # Both conditions must hold for risk/low
+          risk-low-files: 5
+          risk-medium-lines: 499        # Both conditions must hold for risk/medium
+          risk-medium-files: 15         # Otherwise → risk/high
+
+      - name: Log applied labels
+        if: always()
+        run: |
+          echo "Size label: ${{ steps.labeler.outputs.size-label }}"
+          echo "Risk label: ${{ steps.labeler.outputs.risk-label }}"
 ```
 
 ## 📥 Inputs
