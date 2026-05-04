@@ -25,15 +25,15 @@ const run = async (): Promise<void> => {
         }
 
         const config = getConfig();
-        core.info(`Analyzing PR #${pr?.number}: "${pr?.title}"`);
+        core.info(`🔍 Analyzing PR #${pr?.number}: "${pr?.title}"`);
 
         const { owner, repo } = context.repo;
         const analysis = await analyzePullRequest(octokit, { owner, repo, pullNumber: pr?.number }, pr);
 
-        core.info(`Lines added: ${analysis?.additions}, removed: ${analysis?.deletions}, files changed: ${analysis?.filesChanged}`);
+        core.info(`✅ Lines added: ${analysis?.additions}, 🧨 removed: ${analysis?.deletions}, 📁 files changed: ${analysis?.filesChanged}`);
 
         const { sizeLabel, riskLabel } = resolveLabels(analysis, config);
-        core.info(`Size label: ${sizeLabel} | Risk label: ${riskLabel ?? 'none'}`);
+        core.info(`📏 Size label: ${sizeLabel} | ⚠️ Risk label: ${riskLabel ?? 'none'}`);
 
         await applyLabels(octokit, {
             owner,
@@ -48,7 +48,7 @@ const run = async (): Promise<void> => {
         core.setOutput('risk-label', riskLabel ?? '');
         core.info('✅ Labels applied successfully.');
     } catch (error) {
-        core.setFailed(`Action failed: ${error instanceof Error ? error?.message : String(error)}`);
+        core.setFailed(`🚨 Action failed: ${error instanceof Error ? error?.message : String(error)}`);
     }
 };
 
@@ -72,17 +72,25 @@ const run = async (): Promise<void> => {
 export const resolveLabels = (analysis: { totalLines: number; filesChanged: number }, config: ReturnType<typeof getConfig>): { sizeLabel: string; riskLabel: string | null } => {
     const totalLines = analysis?.totalLines ?? 0;
     const filesChanged = analysis?.filesChanged ?? 0;
-    const sizeThresholds = config?.sizeThresholds;
-    const riskThresholds = config?.riskThresholds;
+    const { sizeThresholds, riskThresholds } = config ?? {};
 
-    const sizeLabel = totalLines <= (sizeThresholds?.small ?? 99) ? 'size/small' : totalLines <= (sizeThresholds?.medium ?? 499) ? 'size/medium' : 'size/large';
+    // --| 🏷️ Determine Size Label
+    let sizeLabel = 'size/large';
 
-    const riskLabel =
-        totalLines <= (riskThresholds?.low ?? 99) && filesChanged <= (riskThresholds?.lowFiles ?? 5)
-            ? 'risk/low'
-            : totalLines <= (riskThresholds?.medium ?? 499) && filesChanged <= (riskThresholds?.mediumFiles ?? 15)
-              ? 'risk/medium'
-              : 'risk/high';
+    if (totalLines <= (sizeThresholds?.small ?? 99)) {
+        sizeLabel = 'size/small';
+    } else if (totalLines <= (sizeThresholds?.medium ?? 499)) {
+        sizeLabel = 'size/medium';
+    }
+
+    // --| ⚠️ Determine Risk Label
+    let riskLabel = 'risk/high';
+
+    if (totalLines <= (riskThresholds?.low ?? 99) && filesChanged <= (riskThresholds?.lowFiles ?? 5)) {
+        riskLabel = 'risk/low';
+    } else if (totalLines <= (riskThresholds?.medium ?? 499) && filesChanged <= (riskThresholds?.mediumFiles ?? 15)) {
+        riskLabel = 'risk/medium';
+    }
 
     return { sizeLabel, riskLabel };
 };
