@@ -5,7 +5,7 @@ import jest from 'eslint-plugin-jest';
 
 export default [
     {
-        ignores: ['node_modules/', 'dist/', 'action-dist/', '.github/', '*.config.js'],
+        ignores: ['node_modules/', 'dist/', 'action-dist/', '.github/', '*.config.js']
     },
     js.configs.recommended,
     ...tseslint.configs.strict,
