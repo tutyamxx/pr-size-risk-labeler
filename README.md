@@ -1,5 +1,9 @@
 # 🏷️ PR Size & Risk Labeler
 
+<div align="center">
+  <img src="./prbanner.png" alt="PR Size & Risk Labeler" height="500">
+</div>
+
 * A GitHub Action that automatically labels pull requests based on diff size and change risk.
 > ⚠️ **Not published yet.** This action is in development and not available on the GitHub Marketplace yet. Do not publish or redistribute without permission.
 
