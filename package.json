@@ -2,7 +2,7 @@
   "name": "pr-size-risk-labeler",
   "version": "1.0.0",
   "description": "GitHub Action: auto-label PR size and risk",
-  "main": "dist/main.js",
+  "main": "action-dist/main.js",
   "scripts": {
     "build": "tsc && ncc build dist/main.js -o action-dist --license licenses.txt",
     "test": "jest --verbose",
