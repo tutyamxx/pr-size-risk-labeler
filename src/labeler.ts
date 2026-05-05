@@ -31,40 +31,27 @@ const RISK_LABELS: LabelDefinition[] = [
 ];
 
 /**
- * Applies size and risk labels to a pull request.
- * Removes any stale size/risk labels before adding the newly resolved ones.
- * Skips label existence check and API calls when running locally via nektos/act.
+ * Ensures all required size and risk labels exist in the repository.
+ * Creates any missing labels with their predefined color and description.
  *
  * @param octokit - Authenticated Octokit instance.
- * @param params - PR coordinates, resolved label names, and risk toggle.
+ * @param params - Repository owner, name, and whether risk labels are enabled.
  */
-export const applyLabels = async (octokit: Octokit, { owner, repo, pullNumber, sizeLabel, riskLabel, enableRisk }: ApplyLabelsParams): Promise<void> => {
-    const isActLocal = process.env?.ACT === 'true';
+const ensureLabelsExist = async (octokit: Octokit, { owner, repo, enableRisk }: { owner: string; repo: string; enableRisk: boolean }): Promise<void> => {
+    const required = [...SIZE_LABELS, ...(enableRisk ? RISK_LABELS : [])];
 
-    if (!isActLocal) {
-        await ensureLabelsExist(octokit, { owner, repo, enableRisk });
-    }
+    const { data: existing } = await octokit.rest.issues.listLabelsForRepo({ owner, repo, per_page: 100 });
+    const existingNames = new Set(existing.map(l => l.name));
 
-    const existingLabels = isActLocal ? [] : await fetchExistingPrLabels(octokit, { owner, repo, pullNumber });
-
-    const sizePrefix = 'size/';
-    const riskPrefix = 'risk/';
-
-    const labelsToRemove = existingLabels.filter(l => l.startsWith(sizePrefix) || (enableRisk && l.startsWith(riskPrefix)));
-    const labelsToAdd = [sizeLabel, ...(enableRisk && riskLabel ? [riskLabel] : [])].filter(l => !existingLabels.includes(l));
-
-    if (isActLocal) {
-        core.info(`[act] Skipping GitHub API label calls — would apply: ${labelsToAdd.join(', ')}`);
-
-        return;
-    }
-
-    await Promise.all(labelsToRemove.map(label => removeLabel(octokit, { owner, repo, pullNumber, label })));
-
-    if (labelsToAdd.length > 0) {
-        await octokit.rest.issues.addLabels({ owner, repo, issue_number: pullNumber, labels: labelsToAdd });
-        core.info(`Added labels: ${labelsToAdd.join(', ')}`);
-    }
+    // eslint-disable-next-line capitalized-comments
+    // prettier-ignore
+    await Promise.all(required?.filter(l => !existingNames.has(l.name))?.map(l => octokit.rest.issues.createLabel({
+        owner,
+        repo,
+        name: l.name,
+        color: l.color,
+        description: l.description
+    }).then(() => core.info(`Created label: ${l.name}`))));
 };
 
 /**
@@ -108,27 +95,38 @@ const removeLabel = async (octokit: Octokit, { owner, repo, pullNumber, label }:
 };
 
 /**
- * Ensures all required size and risk labels exist in the repository.
- * Creates any missing labels with their predefined color and description.
+ * Applies size and risk labels to a pull request.
+ * Removes any stale size/risk labels before adding the newly resolved ones.
+ * Skips label existence check and API calls when running locally via nektos/act.
  *
  * @param octokit - Authenticated Octokit instance.
- * @param params - Repository owner, name, and whether risk labels are enabled.
+ * @param params - PR coordinates, resolved label names, and risk toggle.
  */
-const ensureLabelsExist = async (octokit: Octokit, { owner, repo, enableRisk }: { owner: string; repo: string; enableRisk: boolean }): Promise<void> => {
-    const required = [...SIZE_LABELS, ...(enableRisk ? RISK_LABELS : [])];
+export const applyLabels = async (octokit: Octokit, { owner, repo, pullNumber, sizeLabel, riskLabel, enableRisk }: ApplyLabelsParams): Promise<void> => {
+    const isActLocal = process.env?.ACT === 'true';
 
-    const { data: existing } = await octokit.rest.issues.listLabelsForRepo({ owner, repo, per_page: 100 });
-    const existingNames = new Set(existing.map(l => l.name));
+    if (!isActLocal) {
+        await ensureLabelsExist(octokit, { owner, repo, enableRisk });
+    }
 
-    // prettier-ignore
-    await Promise.all(required?.filter(l => !existingNames.has(l.name))?.map(l =>
-        octokit.rest.issues.createLabel({
-            owner,
-            repo,
-            name: l.name,
-            color: l.color,
-            description: l.description
-        })
-        .then(() => core.info(`Created label: ${l.name}`))
-    ));
+    const existingLabels = isActLocal ? [] : await fetchExistingPrLabels(octokit, { owner, repo, pullNumber });
+
+    const sizePrefix = 'size/';
+    const riskPrefix = 'risk/';
+
+    const labelsToRemove = existingLabels.filter(l => l.startsWith(sizePrefix) || (enableRisk && l.startsWith(riskPrefix)));
+    const labelsToAdd = [sizeLabel, ...(enableRisk && riskLabel ? [riskLabel] : [])].filter(l => !existingLabels.includes(l));
+
+    if (isActLocal) {
+        core.info(`[act] Skipping GitHub API label calls — would apply: ${labelsToAdd.join(', ')}`);
+
+        return;
+    }
+
+    await Promise.all(labelsToRemove.map(label => removeLabel(octokit, { owner, repo, pullNumber, label })));
+
+    if (labelsToAdd.length > 0) {
+        await octokit.rest.issues.addLabels({ owner, repo, issue_number: pullNumber, labels: labelsToAdd });
+        core.info(`Added labels: ${labelsToAdd.join(', ')}`);
+    }
 };

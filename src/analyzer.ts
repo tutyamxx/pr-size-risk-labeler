@@ -18,6 +18,24 @@ interface PrAnalysis {
 type Octokit = InstanceType<typeof GitHub>;
 
 /**
+ * Fetches all changed files for a pull request, automatically paginating through results.
+ *
+ * @param octokit - Authenticated Octokit instance.
+ * @param params - Repository owner, name, and PR number.
+ * @returns An array of objects containing the filename of each changed file.
+ */
+const fetchAllChangedFiles = async (octokit: Octokit, { owner, repo, pullNumber }: PrParams): Promise<{ filename: string }[]> => {
+    const files = await octokit.paginate(octokit.rest.pulls.listFiles, {
+        owner,
+        repo,
+        pull_number: pullNumber,
+        per_page: 100
+    });
+
+    return files?.map(f => ({ filename: f?.filename ?? '' }));
+};
+
+/**
  * Analyzes a pull request and returns a summary of its diff size and affected files.
  * When a `prPayload` is provided (e.g. from a mock event), it skips the GitHub API call
  * and uses the payload data directly — useful for local testing with nektos/act.
@@ -42,24 +60,9 @@ export const analyzePullRequest = async (octokit: Octokit, { owner, repo, pullNu
 
         return { additions, deletions, totalLines, filesChanged, fileNames };
     } catch (error) {
-        throw new Error(`Failed to analyze PR #${pullNumber}: ${error instanceof Error ? error?.message : String(error)}`);
+        const err = new Error(`Failed to analyze PR #${pullNumber}: ${error instanceof Error ? error?.message : String(error)}`);
+        Object.assign(err, { cause: error });
+
+        throw err;
     }
-};
-
-/**
- * Fetches all changed files for a pull request, automatically paginating through results.
- *
- * @param octokit - Authenticated Octokit instance.
- * @param params - Repository owner, name, and PR number.
- * @returns An array of objects containing the filename of each changed file.
- */
-const fetchAllChangedFiles = async (octokit: Octokit, { owner, repo, pullNumber }: PrParams): Promise<Array<{ filename: string }>> => {
-    const files = await octokit.paginate(octokit.rest.pulls.listFiles, {
-        owner,
-        repo,
-        pull_number: pullNumber,
-        per_page: 100
-    });
-
-    return files?.map(f => ({ filename: f?.filename ?? '' }));
 };
