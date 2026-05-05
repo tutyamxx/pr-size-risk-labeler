@@ -178,18 +178,33 @@ npm run build && act pull_request --eventpath events/pull_request.json --workflo
 ## 📁 Project structure
 
 ```
-├── src/
-│   ├── main.ts
-│   ├── analyzer.ts
-│   ├── labeler.ts
-│   └── config.ts
+├── action-dist/
+├── dist/
 ├── events/
 │   └── pull_request.json
-├── action.yml
-├── label-pr-example.yml
-├── tsconfig.json
-├── package.json
-├── package-lock.json
+├── node_modules/
+├── src/
+│   ├── __tests__/
+│   │   ├── analyzer.test.ts
+│   │   ├── config.test.ts
+│   │   ├── labeler.test.ts
+│   │   └── main.test.ts
+│   ├── analyzer.ts
+│   ├── config.ts
+│   ├── labeler.ts
+│   └── main.ts
+├── .gitattributes
+├── .gitignore
+├── .prettierignore
 ├── .prettierrc
-└── .prettierignore
+├── action.yml
+├── eslint.config.js
+├── label-pr-example.yml
+├── LICENSE
+├── package-lock.json
+├── package.json
+├── prbanner.png
+├── README.md
+├── tsconfig.json
+└── tsconfig.node.json
 ```
